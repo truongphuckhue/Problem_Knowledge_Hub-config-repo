@@ -1,1 +1,17 @@
+server:
+  port: 8761
 
+spring:
+  application:
+    name: discovery-server
+
+eureka:
+  client:
+#    register-with-eureka: false
+#    fetch-registry: false
+    registry-fetch-interval: 10s   # Interval to fetch instance registry (default is 30s)
+    renewal-interval-in-seconds: 30 # Time interval (in seconds) for renewals
+    eviction-interval-timer-in-ms: 60000  # Frequency to check expired instances (1 minute)
+    # Other relevant settings
+    # Enable or disable the eviction
+    instance-info-replication-interval-seconds: 30

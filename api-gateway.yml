@@ -1,1 +1,53 @@
+spring:
+  main:
+    web-application-type: reactive
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/problem-realm
+
+  application:
+    name: api-gateway
+  config:
+    import: configserver:http://config-server:8888
+
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: problem-service
+          uri: lb://problem-service
+          predicates:
+            - Path=/problems/**
+          filters:
+            - RemoveRequestHeader=Cookie
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/users/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    hostname: api-gateway
+    prefer-ip-address: true
+    metadata-map:
+      instanceId: ${spring.application.name}:${random.value}

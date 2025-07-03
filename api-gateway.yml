@@ -38,6 +38,7 @@ spring:
 
 server:
   port: 8080
+  address: 0.0.0.0
 
 eureka:
   client:
@@ -45,9 +46,5 @@ eureka:
       defaultZone: http://eureka-server:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
-
   instance:
-    hostname: api-gateway
     prefer-ip-address: true
-    metadata-map:
-      instanceId: ${spring.application.name}:${random.value}
